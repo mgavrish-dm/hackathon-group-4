@@ -2,7 +2,16 @@
  * API Service for Form C Review Backend
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+// Automatically detect the API URL based on environment
+const API_BASE_URL = import.meta.env.VITE_API_URL || (() => {
+  // If running in Codespaces, use the Codespaces URL
+  if (typeof window !== 'undefined' && window.location.hostname.includes('github.dev')) {
+    // In Codespaces, the backend will be on the same hostname but different port
+    return window.location.origin.replace('5173', '8000');
+  }
+  // Default to localhost for local development
+  return 'http://localhost:8000';
+})();
 
 export interface AnalysisResponse {
   success: boolean;
