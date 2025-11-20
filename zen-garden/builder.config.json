@@ -1,0 +1,7 @@
+{
+    "repoIndexingConfig": {
+        "designSystems": [
+            "flowbite-react"
+        ]
+    }
+}

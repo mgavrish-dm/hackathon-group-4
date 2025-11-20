@@ -1,0 +1,580 @@
+@import "tailwindcss";
+@plugin "flowbite-react/plugin/tailwindcss";
+@source "../.flowbite-react/class-list.json";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* DealMaker Theme Colors */
+:root {
+  --dealmaker-bg-primary: #020617;
+  --dealmaker-bg-secondary: #0f172a;
+  --dealmaker-bg-card: #1e293b;
+  --dealmaker-teal: #06b6d4;
+  --dealmaker-teal-light: #22d3ee;
+  --dealmaker-teal-dark: #0891b2;
+}
+
+/* Main Theme Wrapper */
+.dealmaker-theme {
+  background: linear-gradient(180deg, #020617 0%, #050814 100%);
+  min-height: 100vh;
+  color: #e5e7eb;
+}
+
+/* Internal Banner */
+.internal-banner {
+  animation: slideDown 0.5s ease;
+}
+
+/* Navigation Bar */
+.nav-bar {
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(71, 85, 105, 0.5);
+}
+
+.logo {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.nav-link {
+  color: #94a3b8;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  color: #e2e8f0;
+}
+
+.nav-link.active {
+  color: var(--dealmaker-teal);
+  position: relative;
+}
+
+.nav-link.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1.25rem;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--dealmaker-teal);
+}
+
+/* CTA Button */
+.cta-button {
+  background: linear-gradient(135deg, var(--dealmaker-teal) 0%, var(--dealmaker-teal-light) 100%);
+  border: none;
+  border-radius: 9999px;
+  font-weight: 600;
+  color: white;
+  padding: 0.5rem 1.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px 0 rgba(6, 182, 212, 0.25);
+}
+
+.cta-button:hover {
+  background: linear-gradient(135deg, var(--dealmaker-teal-light) 0%, var(--dealmaker-teal) 100%);
+  box-shadow: 0 6px 20px 0 rgba(6, 182, 212, 0.4);
+  transform: translateY(-2px);
+}
+
+.cta-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* AI Badge */
+.ai-badge {
+  animation: fadeIn 0.6s ease;
+}
+
+/* Hero Title */
+.hero-title-large {
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  animation: slideUp 0.8s ease;
+}
+
+@media (max-width: 768px) {
+  .hero-title-large {
+    font-size: 2.5rem;
+  }
+}
+
+/* Stats Grid */
+.stats-grid {
+  animation: fadeIn 1s ease 0.2s;
+  animation-fill-mode: both;
+}
+
+.stat-item {
+  animation: slideUp 0.6s ease;
+  animation-fill-mode: both;
+}
+
+.stat-item:nth-child(1) {
+  animation-delay: 0.3s;
+}
+
+.stat-item:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+.stat-item:nth-child(3) {
+  animation-delay: 0.5s;
+}
+
+.stat-item:nth-child(4) {
+  animation-delay: 0.6s;
+}
+
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  line-height: 1.3;
+}
+
+/* Cards */
+.dealmaker-card {
+  background: rgba(30, 41, 59, 0.6) !important;
+  border: 1px solid rgba(71, 85, 105, 0.5) !important;
+  border-radius: 1rem !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3) !important;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.dealmaker-card:hover {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Before/After Cards */
+.before-card,
+.after-card {
+  animation: slideUp 0.6s ease;
+  animation-fill-mode: both;
+  transition: all 0.3s ease;
+}
+
+.before-card {
+  animation-delay: 0.1s;
+}
+
+.after-card {
+  animation-delay: 0.2s;
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.15);
+}
+
+.after-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 30px rgba(6, 182, 212, 0.25);
+}
+
+/* How It Works Card */
+.how-it-works-card {
+  animation: slideUp 0.7s ease 0.3s;
+  animation-fill-mode: both;
+}
+
+/* Impact Snapshot Card */
+.impact-snapshot-card {
+  animation: slideUp 0.6s ease 0.1s;
+  animation-fill-mode: both;
+}
+
+/* Upload Card */
+.upload-card {
+  animation: slideUp 0.8s ease 0.2s;
+  animation-fill-mode: both;
+}
+
+/* Upload Zone */
+.upload-zone {
+  transition: all 0.3s ease;
+}
+
+.upload-zone:hover {
+  box-shadow: 0 0 30px rgba(6, 182, 212, 0.3);
+}
+
+.shadow-teal {
+  box-shadow: 0 0 40px rgba(6, 182, 212, 0.4);
+}
+
+/* File Type Badges */
+.file-type-badge {
+  background: rgba(51, 65, 85, 0.8) !important;
+  border: 1px solid rgba(71, 85, 105, 0.6) !important;
+  color: #94a3b8 !important;
+  font-weight: 600 !important;
+  font-size: 0.75rem !important;
+  padding: 0.25rem 0.75rem !important;
+}
+
+/* Section Titles */
+.section-title {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Loading State */
+.loading-section {
+  animation: fadeIn 0.4s ease;
+}
+
+.loading-state {
+  animation: fadeIn 0.3s ease;
+}
+
+.progress-bar {
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill {
+  width: 100%;
+  animation: progress 1.5s ease-in-out infinite;
+}
+
+@keyframes progress {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Why Section */
+.why-section {
+  animation: fadeIn 1s ease;
+}
+
+/* Feature Cards */
+.feature-card {
+  animation: slideUp 0.6s ease;
+  animation-fill-mode: both;
+  transition: all 0.3s ease;
+}
+
+.feature-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.feature-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.feature-card:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.feature-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px rgba(6, 182, 212, 0.2) !important;
+}
+
+/* Empty State */
+.empty-section {
+  animation: fadeIn 0.6s ease;
+}
+
+/* Error State */
+.error-section {
+  animation: slideDown 0.4s ease;
+}
+
+/* Results Section */
+.results-section {
+  animation: slideUp 0.8s ease;
+}
+
+/* Status Banner */
+.status-banner {
+  animation: slideDown 0.4s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Tabs */
+.dealmaker-tabs {
+  animation: fadeIn 0.4s ease;
+}
+
+.dealmaker-tabs [role="tablist"] {
+  border-bottom: 1px solid rgba(71, 85, 105, 0.5);
+  gap: 1rem;
+}
+
+.dealmaker-tabs button[role="tab"] {
+  color: #64748b !important;
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+  border-bottom: 2px solid transparent;
+}
+
+.dealmaker-tabs button[role="tab"]:hover {
+  color: #94a3b8 !important;
+}
+
+.dealmaker-tabs button[role="tab"][aria-selected="true"] {
+  color: var(--dealmaker-teal) !important;
+  border-bottom-color: var(--dealmaker-teal);
+}
+
+.tab-title {
+  font-size: 0.9375rem;
+}
+
+/* Tab Content */
+.tab-content {
+  animation: fadeInSlide 0.4s ease;
+}
+
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Issue Cards */
+.issue-card {
+  animation: slideUp 0.3s ease;
+  animation-fill-mode: both;
+}
+
+.issue-card:nth-child(1) {
+  animation-delay: 0.05s;
+}
+.issue-card:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.issue-card:nth-child(3) {
+  animation-delay: 0.15s;
+}
+.issue-card:nth-child(4) {
+  animation-delay: 0.2s;
+}
+.issue-card:nth-child(5) {
+  animation-delay: 0.25s;
+}
+
+/* Critical Badge with Pulse */
+.critical-badge {
+  position: relative;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.critical-badge::before {
+  content: "";
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  background: #ef4444;
+  border-radius: 50%;
+  animation: pulseDot 2s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  50% {
+    opacity: 0.8;
+    box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
+  }
+}
+
+/* Verification & Owner Cards */
+.verification-card,
+.owner-card {
+  animation: slideUp 0.3s ease;
+  animation-fill-mode: both;
+}
+
+.verification-card:nth-child(1),
+.owner-card:nth-child(1) {
+  animation-delay: 0.05s;
+}
+.verification-card:nth-child(2),
+.owner-card:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.verification-card:nth-child(3),
+.owner-card:nth-child(3) {
+  animation-delay: 0.15s;
+}
+.verification-card:nth-child(4) {
+  animation-delay: 0.2s;
+}
+.verification-card:nth-child(5) {
+  animation-delay: 0.25s;
+}
+
+/* Tables */
+.compliance-table {
+  background: transparent;
+}
+
+.compliance-table tbody tr {
+  transition: all 0.2s ease;
+}
+
+.compliance-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+/* Base Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Flowbite Overrides for Dark Theme */
+.dark [data-testid="flowbite-badge"] {
+  font-weight: 600;
+  font-size: 0.8125rem;
+}
+
+.dark [data-testid="flowbite-card"] {
+  background: rgba(30, 41, 59, 0.6);
+  border-color: rgba(71, 85, 105, 0.5);
+}
+
+/* Custom Badge Colors */
+[data-testid="flowbite-badge"][color="info"] {
+  background: rgba(59, 130, 246, 0.2) !important;
+  color: #60a5fa !important;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+[data-testid="flowbite-badge"][color="success"] {
+  background: rgba(34, 197, 94, 0.2) !important;
+  color: #4ade80 !important;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+[data-testid="flowbite-badge"][color="warning"] {
+  background: rgba(251, 146, 60, 0.2) !important;
+  color: #fb923c !important;
+  border: 1px solid rgba(251, 146, 60, 0.3);
+}
+
+[data-testid="flowbite-badge"][color="failure"] {
+  background: rgba(239, 68, 68, 0.2) !important;
+  color: #f87171 !important;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+[data-testid="flowbite-badge"][color="yellow"] {
+  background: rgba(234, 179, 8, 0.2) !important;
+  color: #facc15 !important;
+  border: 1px solid rgba(234, 179, 8, 0.3);
+}
+
+[data-testid="flowbite-badge"][color="purple"] {
+  background: rgba(168, 85, 247, 0.2) !important;
+  color: #c084fc !important;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+/* Tooltip Styling */
+.tooltip-custom {
+  background: rgba(15, 23, 42, 0.98) !important;
+  border: 1px solid rgba(6, 182, 212, 0.3) !important;
+  color: #e5e7eb !important;
+  font-size: 0.875rem !important;
+  max-width: 300px !important;
+  padding: 0.75rem !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(10px);
+}
+
+.tooltip-custom::before {
+  border-top-color: rgba(15, 23, 42, 0.98) !important;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .stat-value {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-link.active::after {
+    bottom: -1rem;
+  }
+
+  .stat-value {
+    font-size: 1.75rem;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+  }
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Selection Color */
+::selection {
+  background-color: rgba(6, 182, 212, 0.3);
+  color: white;
+}

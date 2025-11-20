@@ -1,0 +1,358 @@
+# Product Requirements Document: Widgeto Dashboard
+
+## Overview
+Widgeto Dashboard is a financial management and activity tracking application that provides users with a comprehensive overview of their financial activities, transactions, earnings, and scheduled tasks. The dashboard presents key metrics, visualizations, and transaction histories in an intuitive, card-based layout.
+
+---
+
+## 1. Navigation Sidebar
+
+### 1.1 Brand Identity
+**Component:** Logo and Brand Name
+- **Function:** Displays the Widgeto brand identity with a purple circular icon containing a stylized globe design
+- **Elements:**
+  - Purple circular logo icon (44x44px)
+  - "WIDGETO" text in bold purple typography
+  - "DASHBOARD" subtitle in smaller purple text
+- **Purpose:** Establishes brand recognition and provides visual anchor for the application
+
+### 1.2 Navigation Menu
+**Component:** Vertical navigation menu with 7 items
+- **Function:** Provides primary navigation throughout the application
+- **Menu Items:**
+  1. **Dashboard** (Active) - Main overview page (currently selected, indicated by purple vertical bar)
+  2. **Activity** - Activity tracking and history
+  3. **Library** - Resource or document management
+  4. **Security** - Security settings and configurations
+  5. **Schedules** - Calendar and scheduled events
+  6. **Payouts** - Payment and payout management
+  7. **Settings** - Application configuration and preferences
+- **Visual Indicators:**
+  - Each item has an icon representing its function
+  - Active state shown with bold text, darker color, and vertical purple accent bar on the right
+  - Inactive items display in lighter gray text
+- **Behavior:** Click to navigate to respective sections
+
+---
+
+## 2. Header Section
+
+### 2.1 Personalized Greeting
+**Component:** Welcome message
+- **Function:** Provides personalized user experience
+- **Elements:**
+  - Small gray text: "Hi [Username],"
+  - Large bold heading: "Welcome to Widget0!"
+- **Purpose:** Creates welcoming user experience and confirms user identity
+
+### 2.2 Search Box
+**Component:** Search input field
+- **Function:** Allows users to search across the application
+- **Elements:**
+  - Search icon (magnifying glass)
+  - Placeholder text: "Search"
+  - White background with subtle border
+- **Purpose:** Quick access to search functionality across dashboard data
+- **Expected Behavior:** Type to search transactions, activities, or other data
+
+---
+
+## 3. Top Metrics Cards (Row 1)
+
+### 3.1 Activity Card (Primary)
+**Component:** Gradient card with chart visualization
+- **Function:** Displays current activity metric with trend visualization
+- **Data Displayed:**
+  - Label: "Activity"
+  - Value: "$540.50"
+  - Mini line chart showing activity trend over time
+- **Visual Style:** Purple gradient background (light to dark purple)
+- **Purpose:** Quick overview of current activity value with visual trend indicator
+
+### 3.2 Monthly Spending Card
+**Component:** White card with bar chart
+- **Function:** Shows total expenditure for the current month
+- **Data Displayed:**
+  - Label: "Spent this month"
+  - Value: "$682.5"
+  - Vertical bar chart (5 bars) showing daily/weekly spending patterns
+- **Purpose:** Visualize spending patterns and total monthly expenses
+
+### 3.3 Earnings Card
+**Component:** White card with icon indicator
+- **Function:** Displays total earnings
+- **Data Displayed:**
+  - Icon: Bar chart icon in purple circle
+  - Label: "Earnings"
+  - Value: "$350.40"
+- **Purpose:** Quick reference to total earnings amount
+
+### 3.4 Activity Card (Secondary)
+**Component:** White card with right-aligned text
+- **Function:** Secondary activity metric display
+- **Data Displayed:**
+  - Label: "Activity" (right-aligned)
+  - Value: "$540.50" (right-aligned)
+- **Visual Style:** White background, no chart, text aligned to the right
+- **Purpose:** Alternative view or categorization of activity metrics
+
+---
+
+## 4. Balance Overview Section (Row 2, Left)
+
+### 4.1 Balance Card
+**Component:** Large card with comprehensive balance information
+- **Function:** Primary financial overview with multiple data points and trend visualization
+
+#### 4.1.1 Header
+- Title: "Balance"
+- Dropdown selector: "Monthly" with dropdown arrow
+- **Purpose:** Allow users to change time period for balance view
+
+#### 4.1.2 Status Indicator
+- Green checkmark icon with "On track" text
+- **Function:** Provides quick visual feedback on financial health status
+- **Purpose:** Immediate understanding of whether finances are on target
+
+#### 4.1.3 Metric Boxes
+Two white shadow-elevated boxes displaying:
+
+**Saves Box:**
+- Label: "Saves"
+- Value: "43.50%"
+- Badge: "+2.45%" (green background, indicating positive change)
+- **Function:** Shows savings rate and trend
+
+**Balance Box:**
+- Label: "Balance"
+- Value: "$52,422"
+- Badge: "-4.75%" (red/pink background, indicating negative change)
+- **Function:** Shows current balance and change percentage
+
+#### 4.1.4 Trend Chart
+- Large purple line chart showing balance fluctuations over time
+- **Function:** Visualizes balance history and patterns
+- **Purpose:** Helps users identify trends, peaks, and valleys in their balance
+
+---
+
+## 5. Transfers Section (Row 2, Right)
+
+### 5.1 Your Transfers Card
+**Component:** Transaction list with "View all" action
+- **Function:** Displays recent money transfers (incoming and outgoing)
+
+#### 5.1.1 Header
+- Title: "Your Transfers"
+
+#### 5.1.2 Transfer List
+Three transfer items, each showing:
+- **Circular avatar** (placeholder)
+- **Name/Description:**
+  - "From Alex Manda"
+  - "To Laura Santos"
+  - "From Jadon S."
+- **Timestamp:**
+  - "Today, 16:36"
+  - "Today, 08:49"
+  - "Yesterday, 14:36"
+- **Amount** with color coding:
+  - "+$50" (green background - incoming)
+  - "-$27" (red background - outgoing)
+  - "+$157" (green background - incoming)
+
+#### 5.1.3 Footer Action
+- Link: "View all" with right arrow icon
+- **Function:** Navigate to full transfers history
+- **Purpose:** Access complete transaction list beyond the recent 3 shown
+
+---
+
+## 6. Bottom Row Sections
+
+### 6.1 Credit Balance & Transactions Card (Left)
+
+#### 6.1.1 Credit Balance Display
+**Component:** Purple gradient card
+- **Function:** Highlights available credit balance
+- **Elements:**
+  - Label: "Credit Balance"
+  - Value: "$25,215" (large, prominent)
+  - Mini line chart showing credit trend
+  - Three-dot menu icon (top right) for additional options
+- **Visual Style:** Purple gradient matching brand colors
+- **Purpose:** Prominent display of available credit
+
+#### 6.1.2 Recent Transactions Section
+**Component:** Transaction list under "Recent" label
+- **Function:** Shows latest spending/payment transactions
+
+**Transaction Items:**
+Each item displays:
+- **Icon** with category color coding:
+  - Building icon (blue) - Bill & Taxes
+  - Car icon (green) - Car Energy
+  - School icon (yellow) - Design Course
+- **Transaction Name:**
+  - "Bill & Taxes"
+  - "Car Energy"
+  - "Design Course"
+- **Timestamp:**
+  - "Today, 16:36"
+  - "23 Jun, 13:06"
+  - "21 Jun, 19:04"
+- **Amount** (right-aligned):
+  - "-$154.50"
+  - "-$40.50"
+  - "-$70.00"
+
+**Purpose:** Track recent expenses by category with visual categorization
+
+---
+
+### 6.2 Monthly Earnings Card (Center)
+
+**Component:** Card with earnings visualization
+- **Function:** Displays current month's earnings with trend analysis
+
+#### Elements:
+- **Chart icon button** (top right) - toggles chart view or settings
+- **Label:** "This month earnings"
+- **Value:** "$682.5" (large, centered)
+- **Change indicator:** "+2.45%" (green badge)
+- **Large trend chart:** Purple line graph showing earnings fluctuations throughout the month
+
+**Purpose:** Monitor monthly income trends and growth patterns
+
+---
+
+### 6.3 Calendar/Schedule Card (Right)
+
+**Component:** Daily schedule display
+- **Function:** Shows today's scheduled events and tasks
+
+#### Header:
+- **Date:** "27 May" (large, bold)
+
+#### Event List:
+Three scheduled events, each with:
+- **Purple vertical indicator bar** (left accent)
+- **Event name:**
+  - "Meet w/ Simmmple"
+  - "Fitness Training"
+  - "Reading time"
+- **Time range:**
+  - "01:00 PM - 02:00 PM"
+  - "02:00 PM - 03:00 PM"
+  - "03:00 PM - 04:00 PM"
+
+#### Footer Action:
+- Link: "View all Tasks" with right arrow icon
+- **Function:** Navigate to full calendar/schedule view
+- **Purpose:** Access complete schedule beyond today's events
+
+---
+
+## 7. Visual Design Principles
+
+### Color Scheme:
+- **Primary:** Purple (#4318FF) - Brand color, accents, charts
+- **Background:** Light gray/blue (#F4F7FE)
+- **Cards:** White (#FFFFFF)
+- **Success/Positive:** Green (#05CD99)
+- **Negative/Warning:** Red/Pink (#EE5D50, #E31A1A)
+- **Text Primary:** Dark blue-gray (#1B2559, #2B3674)
+- **Text Secondary:** Medium gray (#707EAE, #A3AED0)
+
+### Typography:
+- **Primary Font:** DM Sans
+- **Accent Font:** Poppins (logo only)
+- **Hierarchy:** Clear size differentiation between headings, values, labels, and body text
+
+### Layout:
+- **Grid-based:** Responsive card layout
+- **Spacing:** Consistent 20px gaps between cards
+- **Cards:** Rounded corners (20px border-radius), subtle shadows
+- **Responsive:** Adapts to different screen sizes with breakpoints
+
+---
+
+## 8. User Interactions
+
+### Expected Behaviors:
+
+1. **Navigation Items:** Click to navigate to different sections
+2. **Dropdown (Monthly):** Click to change time period for balance view
+3. **Search Box:** Type to search, Enter to execute search
+4. **View All Links:** Navigate to detailed views of transfers and tasks
+5. **Card Hover States:** Subtle elevation/shadow changes on hover
+6. **Menu Icon (Credit Balance):** Open options for credit management
+7. **Chart Button (Earnings):** Toggle chart display or settings
+
+---
+
+## 9. Data Requirements
+
+### Real-time Data:
+- Current activity values
+- Balance and savings percentages
+- Recent transfers (with timestamps)
+- Credit balance
+- Monthly earnings
+
+### Historical Data:
+- Trend charts require time-series data for:
+  - Activity trends
+  - Balance history
+  - Earnings patterns
+  - Spending patterns
+
+### User Data:
+- Username for personalization
+- Avatar images for transfers (currently placeholder)
+- Transaction categories and icons
+- Schedule/calendar events
+
+---
+
+## 10. Technical Considerations
+
+### Performance:
+- Charts should render efficiently with animation
+- Lazy loading for historical data
+- Responsive image handling for avatars
+
+### Accessibility:
+- Semantic HTML structure
+- ARIA labels for interactive elements
+- Keyboard navigation support
+- Color contrast compliance (WCAG 2.1 AA)
+
+### Responsive Design:
+- Mobile: Vertical stack layout
+- Tablet: 2-column grid
+- Desktop: Multi-column grid (current design)
+
+---
+
+## 11. Future Enhancements
+
+### Potential Features:
+1. Interactive charts (click to drill down)
+2. Customizable dashboard widgets
+3. Export functionality for reports
+4. Notifications for important financial events
+5. Budget setting and tracking
+6. Multi-currency support
+7. Dark mode toggle
+8. Real-time transaction updates
+9. Category filtering for expenses
+10. Goal setting and progress tracking
+
+---
+
+## Document Version
+- **Version:** 1.0
+- **Last Updated:** 2024
+- **Product:** Widgeto Dashboard
+- **Platform:** Web Application (Angular-based)
