@@ -7,6 +7,11 @@ from typing import Dict, List
 import os
 import logging
 
+try:
+    from .compliance_issues_checklist import get_all_issues_as_prompt
+except ImportError:
+    from compliance_issues_checklist import get_all_issues_as_prompt
+
 logger = logging.getLogger(__name__)
 
 
@@ -150,6 +155,9 @@ List all Rule 201 disclosures that ARE present and meet minimum standards.
 4. ASSESS SPECIFICITY: Flag generic/boilerplate language in risks and use of proceeds
 5. VERIFY ALIGNMENT: Business description must match financials and risk factors
 
+**SPECIFIC ISSUES TO CHECK FOR:**
+{specific_issues}
+
 **COMPLIANCE CHECKLIST:**
 {checklist}
 
@@ -158,7 +166,7 @@ Issuer: {issuer_name}
 
 {form_c_text}
 
-Generate the complete compliance report now.
+Generate the complete compliance report now. Be thorough and check for ALL the specific issues listed above.
 """
 
 
@@ -187,8 +195,11 @@ class ComplianceAnalyzer:
             Dictionary containing structured compliance analysis
         """
         try:
-            # Prepare the prompt
+            # Prepare the prompt with specific issues
+            specific_issues = get_all_issues_as_prompt()
+            
             prompt = REVIEW_PROMPT_TEMPLATE.format(
+                specific_issues=specific_issues,
                 checklist=COMPLIANCE_CHECKLIST,
                 issuer_name=issuer_name,
                 form_c_text=form_c_text[:100000]  # Limit to ~100k chars to fit in context
@@ -196,13 +207,14 @@ class ComplianceAnalyzer:
             
             logger.info(f"Analyzing Form C for {issuer_name}...")
             
-            # Call Gemini API
+            # Call Gemini API with enhanced consistency settings
             response = self.model.generate_content(
                 prompt,
                 generation_config=genai.types.GenerationConfig(
-                    temperature=0.3,  # Lower temperature for more consistent analysis
+                    temperature=0.2,  # Even lower temperature for maximum consistency
                     max_output_tokens=8000,  # Gemini can handle longer outputs
-                    top_p=0.95,
+                    top_p=0.9,  # Slightly lower for more focused responses
+                    top_k=40,  # Add top_k for additional consistency
                 )
             )
             

@@ -11,7 +11,7 @@ import {
   Check,
 } from "flowbite-react-icons/outline";
 import { analyzeFormC } from "./services/api";
-import { parseAIReport, type ParsedReport } from "./utils/parseAIReport";
+import { parseAIReport, type ParsedReport } from "./utils/parseAIReport2";
 
 type Severity = "Critical" | "High" | "Medium";
 type Status = "Pending" | "Verified" | "Needs Review" | "Compliant";
@@ -149,6 +149,11 @@ export default function App() {
       case "High": return "warning";
       case "Medium": return "yellow";
     }
+  };
+
+  const sortBySeverity = (issues: ParsedIssue[]) => {
+    const severityOrder = { Critical: 1, High: 2, Medium: 3 };
+    return [...issues].sort((a, b) => severityOrder[a.severity] - severityOrder[b.severity]);
   };
 
   const getStatusColor = (status: Status | "Compliant" | "Needs Review") => {
@@ -394,7 +399,7 @@ export default function App() {
             </div>
 
             <h1 className="hero-title-large mb-6">
-              <span className="block text-white">Form C Review,</span>
+              <span className="block text-white">Form C Review</span>
               <span className="block text-teal-400">Simplified</span>
             </h1>
 
@@ -727,14 +732,14 @@ export default function App() {
                             title="General Issues"
                             description="Material disclosure deficiencies that the issuer must correct."
                           />
-                          <div className="space-y-4">
-                            {parsedReport.amendments.map((amendment, index) => (
-                              <IssueCard key={index} amendment={amendment} index={index} section="ai-general" />
-                            ))}
-                            {parsedReport.amendments.length === 0 && (
-                              <p className="text-sm text-gray-400">No critical issues found.</p>
-                            )}
-                          </div>
+                        <div className="space-y-4">
+                          {sortBySeverity(parsedReport.amendments).map((amendment, index) => (
+                            <IssueCard key={index} amendment={amendment} index={index} section="ai-general" />
+                          ))}
+                          {parsedReport.amendments.length === 0 && (
+                            <p className="text-sm text-gray-400">No critical issues found.</p>
+                          )}
+                        </div>
                         </div>
                       </div>
                     </Tabs.Item>
@@ -804,7 +809,7 @@ export default function App() {
                             description="Material disclosure deficiencies that the issuer must correct."
                           />
                           <div className="space-y-4">
-                            {MOCK_AMENDMENTS.map((amendment, index) => (
+                            {sortBySeverity(MOCK_AMENDMENTS).map((amendment, index) => (
                               <IssueCard key={index} amendment={amendment} index={index} section="general" />
                             ))}
                           </div>

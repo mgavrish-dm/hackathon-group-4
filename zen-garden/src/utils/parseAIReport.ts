@@ -135,14 +135,67 @@ function parseAmendmentsEnhanced(text: string): ParsedIssue[] {
   // Remove the section header to focus on content
   const cleanedText = text.replace(/^[^\n]*(?:REQUIRED ISSUER AMENDMENTS|Required Issuer Amendments)[^\n]*\n*/i, '');
   
-  // First check for the new Gemini format with indented structure
-  // Pattern: "- Issue description: text" followed by indented "- Rule citation:" etc
-  const newFormatPattern = /^\s*-\s+Issue description:\s*(.+?)(?=^\s*-\s+Issue description:|^\s*\*\*II\.|$)/gms;
-  const newFormatMatches = Array.from(cleanedText.matchAll(newFormatPattern));
+  // Pattern to find categories like "- **Category Name**"
+  const categoryPattern = /^-\s*\*\*([^*]+)\*\*$/gm;
+  const categoryMatches = Array.from(cleanedText.matchAll(categoryPattern));
   
-  console.log(`Found ${newFormatMatches.length} issues in new format`);
+  console.log(`Found ${categoryMatches.length} categories`);
+  console.log("Cleaned text preview:", cleanedText.substring(0, 500));
   
-  if (newFormatMatches.length > 0) {
+  // Process each category
+  for (let i = 0; i < categoryMatches.length; i++) {
+    const categoryMatch = categoryMatches[i];
+    const nextCategoryMatch = categoryMatches[i + 1];
+    
+    const categoryName = categoryMatch[1].trim();
+    const startPos = categoryMatch.index! + categoryMatch[0].length;
+    const endPos = nextCategoryMatch ? nextCategoryMatch.index! : cleanedText.length;
+    const categoryContent = cleanedText.substring(startPos, endPos);
+    
+    console.log(`\nProcessing category: ${categoryName}`);
+    console.log(`Category content preview:`, categoryContent.substring(0, 200));
+    
+    // Find issues within this category
+    // Pattern for indented issue blocks - try multiple patterns
+    let issueMatches: RegExpMatchArray[] = [];
+    
+    // Pattern 1: "  - **Issue description:**"
+    const issuePattern1 = /^\s{2,}-\s+\*\*Issue description:\*\*\s*(.+?)(?=^\s{2,}-\s+\*\*Issue description:|^\s*-\s*\*\*|^\*\*II\.|$)/gms;
+    issueMatches = Array.from(categoryContent.matchAll(issuePattern1));
+    
+    // Pattern 2: "  - Issue description:" (without asterisks)
+    if (issueMatches.length === 0) {
+      const issuePattern2 = /^\s{2,}-\s+Issue description:\s*(.+?)(?=^\s{2,}-\s+Issue description:|^\s*-\s*\*\*|^\*\*II\.|$)/gms;
+      issueMatches = Array.from(categoryContent.matchAll(issuePattern2));
+    }
+    
+    // Pattern 3: Just look for any indented bullet point
+    if (issueMatches.length === 0) {
+      const issuePattern3 = /^\s{2,}-\s+(.+?)(?=^\s{2,}-\s+|^\s*-\s*\*\*|^\*\*II\.|$)/gms;
+      issueMatches = Array.from(categoryContent.matchAll(issuePattern3));
+    }
+    
+    console.log(`Found ${issueMatches.length} issues in category ${categoryName}`);
+    
+    for (const issueMatch of issueMatches) {
+      const issueBlock = issueMatch[0];
+      const parsedIssue = parseGeminiCategoryIssue(issueBlock);
+      if (parsedIssue) {
+        issues.push(parsedIssue);
+      }
+    }
+  }
+  
+  // If no categories found, try the direct format
+  if (categoryMatches.length === 0) {
+    console.log("No categories found, trying direct format");
+    // Pattern 1: "- Issue description: text" followed by indented "- Rule citation:" etc
+    const newFormatPattern = /^\s*-\s+(?:\*\*)?Issue description:?\*?\*?\s*(.+?)(?=^\s*-\s+(?:\*\*)?Issue description:|^\s*\*\*II\.|^\*\*II\.|$)/gms;
+    const newFormatMatches = Array.from(cleanedText.matchAll(newFormatPattern));
+    
+    console.log(`Found ${newFormatMatches.length} issues in direct format`);
+    
+    if (newFormatMatches.length > 0) {
     // Process new format
     for (const match of newFormatMatches) {
       const issueBlock = match[0];
@@ -155,18 +208,18 @@ function parseAmendmentsEnhanced(text: string): ParsedIssue[] {
     }
   } else {
     // Try the old format with categories
-    const categoryPattern = /^-\s*\*\*([^*]+)\*\*\s*$/gm;
-    const categoryMatches = Array.from(cleanedText.matchAll(categoryPattern));
+    const oldCategoryPattern = /^-\s*\*\*([^*]+)\*\*\s*$/gm;
+    const oldCategoryMatches = Array.from(cleanedText.matchAll(oldCategoryPattern));
     
-    console.log(`Found ${categoryMatches.length} categories in old format`);
+    console.log(`Found ${oldCategoryMatches.length} categories in old format`);
     
-    if (categoryMatches.length > 0) {
+    if (oldCategoryMatches.length > 0) {
       // Process old format with categories
       const categories: { name: string; content: string }[] = [];
       
-      for (let i = 0; i < categoryMatches.length; i++) {
-        const match = categoryMatches[i];
-        const nextMatch = categoryMatches[i + 1];
+      for (let i = 0; i < oldCategoryMatches.length; i++) {
+        const match = oldCategoryMatches[i];
+        const nextMatch = oldCategoryMatches[i + 1];
         
         const categoryName = match[1].trim();
         const startPos = match.index! + match[0].length;
@@ -191,12 +244,204 @@ function parseAmendmentsEnhanced(text: string): ParsedIssue[] {
       }
     }
   }
+  } // Close the if (categoryMatches.length === 0) block
 
+  // If still no issues found, try a more aggressive approach
+  if (issues.length === 0) {
+    console.log("No issues found with standard parsing, trying fallback parser");
+    issues = parseFallbackFormat(cleanedText);
+  }
+  
   console.log(`Total parsed amendments: ${issues.length}`);
   issues.forEach((issue, idx) => {
-    console.log(`Issue ${idx + 1}:`, issue.issue.substring(0, 80) + '...');
+    console.log(`Issue ${idx + 1}:`, issue.issue?.substring(0, 80) + '...');
   });
   
+  return issues;
+}
+
+// Parse issues within categories with double asterisk format
+function parseGeminiCategoryIssue(block: string): ParsedIssue | null {
+  console.log("Parsing category issue block");
+  console.log("Block content:", block.substring(0, 200));
+  
+  const issue: Partial<ParsedIssue> = {
+    severity: "Medium",
+    page: 1,
+    rule: "Rule 201",
+  };
+  
+  // Extract fields - try both with and without asterisks
+  const fields = [
+    { 
+      patterns: [
+        /^\s*-\s+\*\*Issue description:\*\*\s*(.+)$/m,
+        /^\s*-\s+Issue description:\s*(.+)$/m
+      ], 
+      key: 'issue' 
+    },
+    { 
+      patterns: [
+        /^\s*-\s+\*\*Rule citation:\*\*\s*(.+)$/m,
+        /^\s*-\s+Rule citation:\s*(.+)$/m
+      ], 
+      key: 'rule' 
+    },
+    { 
+      patterns: [
+        /^\s*-\s+\*\*Severity:\*\*\s*(.+)$/m,
+        /^\s*-\s+Severity:\s*(.+)$/m
+      ], 
+      key: 'severity' 
+    },
+    { 
+      patterns: [
+        /^\s*-\s+\*\*Page number(?:\s+where found)?:\*\*\s*(.+)$/m,
+        /^\s*-\s+Page number(?:\s+where found)?:\s*(.+)$/m,
+        /^\s*-\s+\*\*Page number:\*\*\s*(.+)$/m,
+        /^\s*-\s+Page number:\s*(.+)$/m
+      ], 
+      key: 'page' 
+    },
+    { 
+      patterns: [
+        /^\s*-\s+\*\*Specific explanation(?:\s+with details from the document)?:\*\*\s*(.+?)(?=^\s*-|$)/ms,
+        /^\s*-\s+Specific explanation(?:\s+with details from the document)?:\s*(.+?)(?=^\s*-|$)/ms
+      ], 
+      key: 'summary' 
+    },
+    { 
+      patterns: [
+        /^\s*-\s+\*\*AI reasoning(?:\s+explaining how I detected this issue)?:\*\*\s*(.+?)(?=^\s*-|$)/ms,
+        /^\s*-\s+AI reasoning(?:\s+explaining how I detected this issue)?:\s*(.+?)(?=^\s*-|$)/ms
+      ], 
+      key: 'aiReasoning' 
+    },
+  ];
+  
+  for (const field of fields) {
+    let match = null;
+    
+    // Try each pattern for this field
+    for (const pattern of field.patterns) {
+      match = block.match(pattern);
+      if (match) break;
+    }
+    
+    if (match) {
+      const value = match[1].trim();
+      console.log(`Found ${field.key}:`, value.substring(0, 100));
+      
+      switch (field.key) {
+        case 'issue':
+          issue.issue = value;
+          break;
+        case 'rule':
+          issue.rule = value || "Rule 201";
+          break;
+        case 'severity':
+          issue.severity = value as Severity;
+          break;
+        case 'page':
+          const pageStr = value.replace(/[^0-9,]/g, '');
+          const pages = pageStr.split(',').map(p => p.trim());
+          issue.page = parseInt(pages[0]) || 1;
+          if (pages.length > 1) {
+            issue.pageList = pages.map(p => parseInt(p)).filter(p => !isNaN(p));
+          }
+          break;
+        case 'summary':
+          issue.summary = value;
+          break;
+        case 'aiReasoning':
+          issue.aiReasoning = value;
+          break;
+      }
+    }
+  }
+  
+  // Validate required fields
+  if (!issue.issue || !issue.summary) {
+    console.log("Missing required fields:", { issue: !!issue.issue, summary: !!issue.summary });
+    return null;
+  }
+  
+  // Generate tooltip if AI reasoning is available
+  if (issue.aiReasoning) {
+    issue.tooltip = `AI Reasoning: ${issue.aiReasoning}`;
+  }
+  
+  return issue as ParsedIssue;
+}
+
+// Fallback parser for when standard formats don't work
+function parseFallbackFormat(text: string): ParsedIssue[] {
+  console.log("=== Fallback parser ===");
+  const issues: ParsedIssue[] = [];
+  
+  // Look for any line that contains "Issue description:" 
+  const lines = text.split('\n');
+  let currentIssue: Partial<ParsedIssue> | null = null;
+  
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    
+    if (line.includes('Issue description:')) {
+      // Save previous issue if exists
+      if (currentIssue && currentIssue.issue && currentIssue.summary) {
+        issues.push({
+          ...currentIssue,
+          severity: currentIssue.severity || 'Medium',
+          page: currentIssue.page || 1,
+          rule: currentIssue.rule || 'Rule 201',
+        } as ParsedIssue);
+      }
+      
+      // Start new issue
+      currentIssue = {};
+      const issueText = line.split('Issue description:')[1]?.trim();
+      if (issueText) {
+        currentIssue.issue = issueText;
+      }
+    } else if (currentIssue) {
+      // Look for other fields
+      if (line.includes('Rule citation:')) {
+        currentIssue.rule = line.split('Rule citation:')[1]?.trim() || 'Rule 201';
+      } else if (line.includes('Severity:')) {
+        const severity = line.split('Severity:')[1]?.trim();
+        if (severity === 'Critical' || severity === 'High' || severity === 'Medium') {
+          currentIssue.severity = severity;
+        }
+      } else if (line.includes('Page number')) {
+        const pageText = line.split(/Page number(?:\s+where found)?:/)[1]?.trim();
+        if (pageText) {
+          const pageNum = parseInt(pageText.match(/\d+/)?.[0] || '1');
+          currentIssue.page = pageNum;
+        }
+      } else if (line.includes('Specific explanation')) {
+        currentIssue.summary = line.split(/Specific explanation(?:\s+with details from the document)?:/)[1]?.trim();
+        
+        // Collect multi-line explanation
+        let j = i + 1;
+        while (j < lines.length && !lines[j].includes(':') && lines[j].trim()) {
+          currentIssue.summary += ' ' + lines[j].trim();
+          j++;
+        }
+      }
+    }
+  }
+  
+  // Don't forget the last issue
+  if (currentIssue && currentIssue.issue && currentIssue.summary) {
+    issues.push({
+      ...currentIssue,
+      severity: currentIssue.severity || 'Medium',
+      page: currentIssue.page || 1,
+      rule: currentIssue.rule || 'Rule 201',
+    } as ParsedIssue);
+  }
+  
+  console.log(`Fallback parser found ${issues.length} issues`);
   return issues;
 }
 
@@ -211,29 +456,30 @@ function parseNewGeminiIssueBlock(block: string): ParsedIssue | null {
   };
   
   // Extract fields using patterns for indented format
+  // Handle both with and without ** markers
   const fields = [
     { 
-      pattern: /^\s*-\s+Issue description:\s*(.+)$/m, 
+      pattern: /^\s*-\s+(?:\*\*)?Issue description:?\*?\*?\s*(.+)$/m, 
       key: 'issue' 
     },
     { 
-      pattern: /^\s*-\s+Rule citation:\s*(.+)$/m, 
+      pattern: /^\s*-\s+(?:\*\*)?Rule citation:?\*?\*?\s*(.+)$/m, 
       key: 'rule' 
     },
     { 
-      pattern: /^\s*-\s+Severity:\s*(.+)$/m, 
+      pattern: /^\s*-\s+(?:\*\*)?Severity:?\*?\*?\s*(.+)$/m, 
       key: 'severity' 
     },
     { 
-      pattern: /^\s*-\s+Page number(?:\s+where)?\s+found:\s*(.+)$/m, 
+      pattern: /^\s*-\s+(?:\*\*)?Page number(?:\s+where)?\s+found:?\*?\*?\s*(.+)$/m, 
       key: 'page' 
     },
     { 
-      pattern: /^\s*-\s+Specific explanation(?:\s+with details from the document)?:\s*(.+?)(?=^\s*-|$)/ms, 
+      pattern: /^\s*-\s+(?:\*\*)?Specific explanation(?:\s+with details from the document)?:?\*?\*?\s*(.+?)(?=^\s*-|$)/ms, 
       key: 'summary' 
     },
     { 
-      pattern: /^\s*-\s+AI reasoning(?:\s+explaining how I detected this issue)?:\s*(.+?)(?=^\s*-|$)/ms, 
+      pattern: /^\s*-\s+(?:\*\*)?AI reasoning(?:\s+explaining how I detected this issue)?:?\*?\*?\s*(.+?)(?=^\s*-|$)/ms, 
       key: 'aiReasoning' 
     },
   ];

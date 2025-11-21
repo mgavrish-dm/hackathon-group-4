@@ -44,6 +44,9 @@ app.add_middleware(
         "http://localhost:3000",  # Alternative React port
         "http://127.0.0.1:5173",
         "http://127.0.0.1:3000",
+        "https://*.app.github.dev",  # GitHub Codespaces
+        "https://*.github.dev",      # GitHub Codespaces alternate
+        "*",  # Allow all origins for Codespaces (temporary for testing)
     ],
     allow_credentials=True,
     allow_methods=["*"],
